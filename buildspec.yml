@@ -1,0 +1,14 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+        python: 3.x
+  build:
+    commands:
+      - export BUCKET=davidpelltestireland
+      - aws cloudformation package --template-file template.yml --s3-bucket davidpelltestireland --output-template-file outputtemplate.yml
+artifacts:
+  type: zip
+  files:
+    - template.yml
+    - outputtemplate.yml
