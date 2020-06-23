@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  lambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_square_function.lambda_square_handler
+      Runtime: python3.6
+      Description: ''
+      MemorySize: 128
+      Timeout: 15
+      CodeUri: ./lambdaFunction
+      Events:
+        LambdaMicroservice:
+          Type: Api
+          Properties:
+            Path: /test
+            Method: ANY
+  lambdaFunctionPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName:
+        'Fn::GetAtt':
+          - lambdaFunction
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
